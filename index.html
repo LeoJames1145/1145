@@ -4,30 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>机长起飞日记 ✈️</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* 样式保持不变，省略以节省空间。你可以用之前的完整样式替换这里 */
-    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f9ff, #e6f0ff); color: #2c3e50; margin:0; min-height:100vh; display:flex; flex-direction:column; }
-    .container { max-width:420px; margin:0 auto; padding:24px 16px; flex:1; }
-    .page { display:none; }
-    .page.active { display:block; }
-    .greeting { font-size:2.2rem; font-weight:700; text-align:center; margin:32px 0 40px; color:#4a90e2; }
-    .status-card { background:#fff; border-radius:24px; padding:28px 20px; box-shadow:0 8px 32px rgba(74,144,226,0.12); margin-bottom:32px; }
-    .today { font-size:1.4rem; font-weight:600; text-align:center; margin:16px 0 24px; }
-    .streak-box { display:flex; gap:16px; margin:24px 0; }
-    .streak-item { flex:1; background:rgba(74,144,226,0.05); border-radius:16px; padding:16px; text-align:center; }
-    .streak-num { font-size:2.5rem; font-weight:700; color:#4a90e2; }
-    .mood-section { margin-top:32px; text-align:center; }
+    body { font-family: system-ui, sans-serif; background: linear-gradient(135deg, #f5f9ff, #e6f0ff); color: #333; margin:0; min-height:100vh; }
+    .container { max-width:420px; margin:0 auto; padding:20px; }
+    .greeting { font-size:2rem; text-align:center; margin:30px 0; color:#1a73e8; }
+    .status-card { background:white; border-radius:16px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.1); margin-bottom:30px; text-align:center; }
+    .today { font-size:1.3rem; margin:20px 0; }
+    .mood-section { margin:30px 0; }
     .mood-options { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
-    .mood-btn { font-size:2.2rem; background:none; border:2px solid transparent; border-radius:50%; width:60px; height:60px; cursor:pointer; }
-    .mood-btn.selected { border-color:#4a90e2; transform:scale(1.15); background:rgba(74,144,226,0.1); }
-    .fly-btn { background:linear-gradient(135deg,#4a90e2,#5fa8f5); color:white; font-size:1.3rem; border:none; border-radius:999px; padding:18px; width:100%; margin:40px 0; cursor:pointer; }
-    .fly-btn:disabled { background:#50c878; }
-    .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(255,255,255,0.95); display:flex; padding:12px 0; border-top:1px solid #eee; }
-    .nav-item { flex:1; text-align:center; font-size:1.8rem; color:#7f8c8d; cursor:pointer; }
-    .nav-item.active { color:#4a90e2; transform:scale(1.15); }
+    .mood-btn { font-size:2.5rem; background:none; border:2px solid transparent; border-radius:50%; width:60px; height:60px; cursor:pointer; transition:0.2s; }
+    .mood-btn.selected { border-color:#1a73e8; transform:scale(1.2); }
+    .fly-btn { background:#1a73e8; color:white; font-size:1.2rem; border:none; border-radius:50px; padding:16px 0; width:100%; cursor:pointer; margin:30px 0; }
+    .fly-btn:disabled { background:#34a853; }
+    .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:white; display:flex; padding:10px 0; border-top:1px solid #eee; }
+    .nav-item { flex:1; text-align:center; font-size:2rem; color:#888; cursor:pointer; }
+    .nav-item.active { color:#1a73e8; }
   </style>
 </head>
 <body>
@@ -37,33 +28,20 @@
     <div class="greeting">机长，中午好！ ✈️</div>
     <div class="status-card">
       <div class="today" id="todayStatus">今日还没起飞</div>
-      <div class="streak-box">
-        <div class="streak-item"><div class="streak-num" id="currentStreak">0</div><div>当前连飞</div></div>
-        <div class="streak-item"><div class="streak-num" id="maxStreak">0</div><div>历史最长</div></div>
-      </div>
       <div class="mood-section" id="moodSection">
-        <div>今天的心情是？</div>
+        <p>今天心情？</p>
         <div class="mood-options">
-          <button class="mood-btn" data-mood="super">😎</button>
           <button class="mood-btn" data-mood="happy">😊</button>
           <button class="mood-btn" data-mood="normal">😐</button>
           <button class="mood-btn" data-mood="tired">😴</button>
-          <button class="mood-btn" data-mood="sad">😔</button>
         </div>
       </div>
     </div>
-    <button class="fly-btn" id="flyBtn">起飞！ ✈️</button>
+    <button class="fly-btn" id="flyBtn">✈️ 起飞！</button>
   </div>
 
-  <div id="stats" class="page">
-    <div class="greeting">统计 📊</div>
-    <p>统计页（待加载）</p>
-  </div>
-
-  <div id="settings" class="page">
-    <div class="greeting">设置 ⚙️</div>
-    <button id="clearBtn">清空记录</button>
-  </div>
+  <div id="stats" class="page">统计页（测试）</div>
+  <div id="settings" class="page">设置页（测试）</div>
 </div>
 
 <div class="bottom-nav">
@@ -73,52 +51,46 @@
 </div>
 
 <script>
-  console.log("=== JS 脚本开始执行 ===");
-  console.log("浏览器是否支持 localStorage:", !!window.localStorage);
-
-  const MOODS = { super: '😎', happy: '😊', normal: '😐', tired: '😴', sad: '😔' };
+  console.log("脚本加载开始");
 
   // 导航切换
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
-      console.log('导航点击:', item.dataset.page);
+      console.log('点击了导航：' + item.dataset.page);
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(item.dataset.page).classList.add('active');
       item.classList.add('active');
     });
   });
+  console.log("导航监听器绑定完成");
 
   // 心情选择
   document.querySelectorAll('.mood-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      console.log('心情选中:', btn.dataset.mood);
+      console.log('点击心情：' + btn.dataset.mood);
       document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
     });
   });
+  console.log("心情按钮监听器绑定完成");
 
   // 起飞按钮
   const flyBtn = document.getElementById('flyBtn');
   if (flyBtn) {
     flyBtn.addEventListener('click', () => {
-      console.log('起飞按钮点击');
-      alert('起飞成功！（测试）');
+      console.log("起飞按钮被点击");
+      document.getElementById('todayStatus').textContent = '今日已起飞！🚀';
+      flyBtn.disabled = true;
+      flyBtn.textContent = '今日已起飞 ✓';
+      alert('起飞成功！（测试版）');
     });
+    console.log("起飞按钮监听器绑定完成");
   } else {
-    console.error('找不到 flyBtn 元素');
+    console.error("找不到起飞按钮元素");
   }
 
-  // 清空按钮（测试）
-  const clearBtn = document.getElementById('clearBtn');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      console.log('清空点击');
-      alert('清空测试');
-    });
-  }
-
-  console.log("=== JS 执行结束，所有监听器已绑定 ===");
+  console.log("所有监听器绑定完毕，JS 执行结束");
 </script>
 </body>
 </html>
