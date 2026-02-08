@@ -1,96 +1,369 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>机长起飞日记 ✈️</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background: linear-gradient(135deg, #f5f9ff, #e6f0ff); color: #333; margin:0; min-height:100vh; }
-    .container { max-width:420px; margin:0 auto; padding:20px; }
-    .greeting { font-size:2rem; text-align:center; margin:30px 0; color:#1a73e8; }
-    .status-card { background:white; border-radius:16px; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.1); margin-bottom:30px; text-align:center; }
-    .today { font-size:1.3rem; margin:20px 0; }
-    .mood-section { margin:30px 0; }
-    .mood-options { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
-    .mood-btn { font-size:2.5rem; background:none; border:2px solid transparent; border-radius:50%; width:60px; height:60px; cursor:pointer; transition:0.2s; }
-    .mood-btn.selected { border-color:#1a73e8; transform:scale(1.2); }
-    .fly-btn { background:#1a73e8; color:white; font-size:1.2rem; border:none; border-radius:50px; padding:16px 0; width:100%; cursor:pointer; margin:30px 0; }
-    .fly-btn:disabled { background:#34a853; }
-    .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:white; display:flex; padding:10px 0; border-top:1px solid #eee; }
-    .nav-item { flex:1; text-align:center; font-size:2rem; color:#888; cursor:pointer; }
-    .nav-item.active { color:#1a73e8; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机长起飞日记 ✈️</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(135deg, #f5f9ff, #e6f0ff);
+    color: #2c3e50;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px;
+    flex: 1;
+  }
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  .header {
+    text-align: center;
+    margin: 30px 0 40px;
+  }
+  .greeting {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #4a90e2;
+  }
+  .status-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(74,144,226,0.15);
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  .today {
+    font-size: 1.4rem;
+    margin: 20px 0;
+    font-weight: 600;
+  }
+  .streak-box {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .streak-item {
+    flex: 1;
+    background: rgba(74,144,226,0.06);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .streak-num {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: #4a90e2;
+  }
+  .streak-label {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+  }
+  .mood-section {
+    margin: 30px 0;
+  }
+  .mood-title {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 12px;
+  }
+  .mood-options {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .mood-btn {
+    font-size: 2.4rem;
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mood-btn.selected {
+    border-color: #4a90e2;
+    background: rgba(74,144,226,0.1);
+    transform: scale(1.15);
+  }
+  .fly-btn {
+    background: linear-gradient(135deg, #4a90e2, #5fa8f5);
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 999px;
+    padding: 18px 0;
+    width: 100%;
+    margin: 40px 0;
+    box-shadow: 0 10px 30px rgba(74,144,226,0.3);
+    cursor: pointer;
+  }
+  .fly-btn:disabled {
+    background: #50c878;
+    box-shadow: none;
+  }
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+  }
+  .nav-item {
+    flex: 1;
+    text-align: center;
+    font-size: 1.8rem;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .nav-item.active {
+    color: #4a90e2;
+    transform: scale(1.12);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 30px 0;
+  }
+  .stats-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .stats-label {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+  }
+  .stats-value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #4a90e2;
+  }
+  .mood-history {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .mood-day {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+  }
+  .clear-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ff8787);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 30px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
 
 <div class="container">
-  <div id="home" class="page active">
-    <div class="greeting">机长，中午好！ ✈️</div>
+
+  <!-- 主页 -->
+  <div id="home" class="tab-content active">
+    <div class="header">
+      <div class="greeting">机长，中午好！ ✈️</div>
+    </div>
     <div class="status-card">
       <div class="today" id="todayStatus">今日还没起飞</div>
+      <div class="streak-box">
+        <div class="streak-item">
+          <div class="streak-num" id="currentStreak">0</div>
+          <div class="streak-label">当前连飞</div>
+        </div>
+        <div class="streak-item">
+          <div class="streak-num" id="maxStreak">0</div>
+          <div class="streak-label">历史最长</div>
+        </div>
+      </div>
       <div class="mood-section" id="moodSection">
-        <p>今天心情？</p>
+        <div class="mood-title">今天的心情是？</div>
         <div class="mood-options">
+          <button class="mood-btn" data-mood="super">😎</button>
           <button class="mood-btn" data-mood="happy">😊</button>
           <button class="mood-btn" data-mood="normal">😐</button>
           <button class="mood-btn" data-mood="tired">😴</button>
+          <button class="mood-btn" data-mood="sad">😔</button>
         </div>
       </div>
     </div>
     <button class="fly-btn" id="flyBtn">✈️ 起飞！</button>
   </div>
 
-  <div id="stats" class="page">统计页（测试）</div>
-  <div id="settings" class="page">设置页（测试）</div>
+  <!-- 统计 -->
+  <div id="stats" class="tab-content">
+    <div class="header">
+      <div class="greeting">飞行统计 📊</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="stats-label">本周</div>
+        <div class="stats-value" id="statsWeek">0 次</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-label">本月</div>
+        <div class="stats-value" id="statsMonth">0 次</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-label">今年</div>
+        <div class="stats-value" id="statsYear">0 次</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-label">总计</div>
+        <div class="stats-value" id="statsTotal">0 次</div>
+      </div>
+    </div>
+    <div class="status-card">
+      <div class="moods-title">最近7天心情</div>
+      <div class="mood-history" id="moodHistory"></div>
+    </div>
+  </div>
+
+  <!-- 设置 -->
+  <div id="settings" class="tab-content">
+    <div class="header">
+      <div class="greeting">设置 ⚙️</div>
+    </div>
+    <div class="status-card">
+      <ul style="list-style:none; padding-left:0; line-height:2;">
+        <li>• 每日一次起飞记录</li>
+        <li>• 心情 + 连飞统计</li>
+        <li>• 数据保存在本机浏览器</li>
+      </ul>
+      <button class="clear-btn" id="clearBtn">清空所有记录</button>
+    </div>
+  </div>
+
 </div>
 
 <div class="bottom-nav">
-  <div class="nav-item active" data-page="home">🏠</div>
-  <div class="nav-item" data-page="stats">📊</div>
-  <div class="nav-item" data-page="settings">⚙️</div>
+  <div class="nav-item active" onclick="showTab('home')">🏠</div>
+  <div class="nav-item" onclick="showTab('stats')">📊</div>
+  <div class="nav-item" onclick="showTab('settings')">⚙️</div>
 </div>
 
 <script>
-  console.log("脚本加载开始");
-
-  // 导航切换
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      console.log('点击了导航：' + item.dataset.page);
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.getElementById(item.dataset.page).classList.add('active');
-      item.classList.add('active');
-    });
-  });
-  console.log("导航监听器绑定完成");
-
-  // 心情选择
-  document.querySelectorAll('.mood-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      console.log('点击心情：' + btn.dataset.mood);
-      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-    });
-  });
-  console.log("心情按钮监听器绑定完成");
-
-  // 起飞按钮
-  const flyBtn = document.getElementById('flyBtn');
-  if (flyBtn) {
-    flyBtn.addEventListener('click', () => {
-      console.log("起飞按钮被点击");
-      document.getElementById('todayStatus').textContent = '今日已起飞！🚀';
-      flyBtn.disabled = true;
-      flyBtn.textContent = '今日已起飞 ✓';
-      alert('起飞成功！（测试版）');
-    });
-    console.log("起飞按钮监听器绑定完成");
-  } else {
-    console.error("找不到起飞按钮元素");
+  // 切换 tab
+  function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    document.querySelector(`.nav-item[onclick="showTab('${tabId}')"]`).classList.add('active');
+    
+    if (tabId === 'stats') loadStats();
   }
 
-  console.log("所有监听器绑定完毕，JS 执行结束");
-</script>
-</body>
-</html>
+  const MOODS = { super: '😎', happy: '😊', normal: '😐', tired: '😴', sad: '😔' };
+
+  let selectedMood = null;
+  document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedMood = btn.dataset.mood;
+    };
+  });
+
+  // 起飞
+  document.getElementById('flyBtn').onclick = () => {
+    if (document.getElementById('flyBtn').disabled) return;
+    localStorage.setItem('fly_' + new Date().toISOString().split('T')[0], '1');
+    if (selectedMood) localStorage.setItem('mood_' + new Date().toISOString().split('T')[0], selectedMood);
+    loadHome();
+    selectedMood = null;
+  };
+
+  // 清空
+  document.getElementById('clearBtn').onclick = () => {
+    if (confirm('确定清空所有记录？')) {
+      localStorage.clear();
+      location.reload();
+    }
+  };
+
+  // 加载主页状态
+  function loadHome() {
+    const today = new Date().toISOString().split('T')[0];
+    const flew = localStorage.getItem('fly_' + today) === '1';
+    document.getElementById('todayStatus').textContent = flew ? '今日已起飞！🚀' : '今日还没起飞';
+    document.getElementById('flyBtn').disabled = flew;
+    document.getElementById('flyBtn').textContent = flew ? '今日已起飞 ✓' : '✈️ 起飞！';
+
+    // 当前连飞 & 最长
+    let streak = 0;
+    let checkDate = new Date();
+    while (true) {
+      const key = 'fly_' + checkDate.toISOString().split('T')[0];
+      if (localStorage.getItem(key) !== '1') break;
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+    document.getElementById('currentStreak').textContent = streak;
+    document.getElementById('maxStreak').textContent = Math.max(streak, localStorage.getItem('max_streak') || 0);
+
+    document.getElementById('moodSection').style.display = flew ? 'none' : 'block';
+  }
+
+  // 加载统计
+  function loadStats() {
+    let week = 0, month = 0, year = 0, total = 0;
+    const now = new Date();
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith('fly_') && localStorage.getItem(key) === '1') {
+        total++;
+        const dateStr = key.replace('fly_', '');
+        const d = new Date(dateStr);
+        const diffDays = Math.floor((now - d) / 86400000);
+        if (diffDays <= 6) week++;
+        if (d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()) month++;
+        if (d.getFullYear() === now.getFullYear()) year++;
+      }
+    }
+    document.getElementById('statsWeek').textContent = week + ' 次';
+    document.getElementById('statsMonth').textContent = month + ' 次';
+    document.getElementById('statsYear').textContent = year + ' 次';
+    document.getElementById('statsTotal').textContent = total + ' 次';
+
+    // 最近7天心情
+    const history = document.getElementById('moodHistory');
+    history.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const mood = localStorage.getItem('mood_' + dateStr);
+      const div = document.createElement('div');
+      div.className = 'mood-day';
+      div.innerHTML = `<div class="mood-emoji">\( {mood ? MOODS[mood] : '—'}</di
